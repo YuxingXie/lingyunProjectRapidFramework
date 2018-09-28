@@ -1,0 +1,56 @@
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
+def getDateTime() {
+    DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    return df.format(new Date());
+}
+group 'com.lingyun.projects'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
+    }
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+jar {
+    baseName = 'lingyun-rapid-framework'
+    version = getDateTime()
+}
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+//    compile('com.googlecode.rapid-framework:rapid-core')
+    compile group: 'com.googlecode.rapid-framework', name: 'rapid-core', version: '4.0.5'
+    compile('com.googlecode.rapid-framework:rapid-generator:4.0.6')
+    compile group: 'com.googlecode.rapid-framework', name: 'rapid-generator-ext', version: '4.0.6'
+    compile group: 'org.springframework', name: 'spring-dao', version: '2.0.8'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.196'
+
+    testCompile group: 'com.googlecode.rapid-framework', name: 'rapid-generator-template', version: '4.0.6'
+}

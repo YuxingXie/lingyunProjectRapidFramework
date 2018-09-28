@@ -1,0 +1,27 @@
+
+<#assign springMVCUrlMapping = "sac">
+<#assign actionBasePath = "/"+namespace+"/"+table.className>
+
+<#assign jspFileBasePath = "/"+namespace+"/"+table.className>
+<#macro dateColumn isDate>
+    <#if isDate><#nested></#if>
+</#macro>
+<#macro hasForeignKey columnNameP>
+参数:${columnNameP}
+	<#list table.importedKeys.associatedTables?values as foreignKey>
+	<#assign fkSqlTable = foreignKey.sqlTable>
+	<#assign fkTable	= fkSqlTable.className>
+	<#assign fkPojoClass = fkSqlTable.className>
+	<#assign fkPojoClassVar = fkPojoClass?uncap_first>
+	fkPojoClass:${fkPojoClass}|fkPojoClassVar: ${fkPojoClassVar}|fkPojoClassVar:${fkPojoClassVar}
+	<#list foreignKey.parentColumns?values as fkColumn>
+		${fkColumn}|
+	</#list>
+        <#list fkSqlTable.columns as column>
+        <#if column.pk>
+        ${column.columnName}(${fkPojoClassVar}
+        </#if>
+		</#list>
+	</#list>
+</#macro>
+<#macro toCamel columnName><#assign count=0/><#list columnName?split("_") as x><#assign count=count+1/><#if count==1>${x?lower_case}<#else>${x?lower_case?cap_first}</#if></#list></#macro>
