@@ -2,6 +2,7 @@ package cn.org.rapid_framework.generator;
 
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * 
@@ -15,21 +16,27 @@ public class GeneratorMain {
 	 */
 	public static void main(String[] args) throws Exception {
 		Generator generator = new Generator();
-		generator.setTemplateRootDir(new File("/Users/xulei/IdeaProjects/lingyunProjectRapidFramework/src/main/resources/jpa_template"));
-		generator.setOutRootDir("/Users/xulei/IdeaProjects/lingyunProjectRapidFramework/generator-output");
-		GeneratorFacade g = new GeneratorFacade();
-		g.setGenerator(generator);
-
-		g.printAllTableNames();				//打印数据库中的表名称
-		
-		g.deleteOutRootDir();							//删除生成器的输出目录
+		generator.setTemplateRootDir(new File("templates/template"));
+		generator.setOutRootDir("generator-output");
+		GeneratorFacade facade = new GeneratorFacade();
+		facade.setGenerator(generator);
+		facade.deleteOutRootDir();
+//
 
 
-		g.generateByMap();
 
-		g.generateByAllTable();
+		GeneratorProperties.setProperty("moduleName","life");
+		GeneratorProperties.setProperty("basepackage","com.lingyun.projects");
+		GeneratorProperties.setProperty("tableRemovePrefixes","test");
+
+		GeneratorProperties.setProperty("jdbc_url","jdbc:h2:~/test");
+		GeneratorProperties.setProperty("jdbc_driver","org.h2.Driver");
+		GeneratorProperties.setProperty("jdbc_username","sa");
+		GeneratorProperties.setProperty("outRoot","generator-output");
+
+		facade.generateByTable("test_user");
 
 		//打开文件夹
-		Runtime.getRuntime().exec("cmd.exe /c start "+GeneratorProperties.getRequiredProperty("outRootDir"));
+		Runtime.getRuntime().exec("cmd.exe /c start "+GeneratorProperties.getRequiredProperty("outRoot"));
 	}
 }

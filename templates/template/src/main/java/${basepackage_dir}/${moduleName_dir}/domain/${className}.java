@@ -27,9 +27,7 @@ public class ${className} extends BaseEntity{
 	public static final String TABLE_ALIAS = "${table.tableAlias}";
 	<#list table.columns as column>
 	public static final String ${column.constantName} = "${column.columnAlias}";
-    <#if mainShow==column.constantName>
-    public static final MAIN_SHOW = "${column.columnNameLower}";
-    </#if>
+
 	</#list>
 
 	//date formats
@@ -53,7 +51,7 @@ public class ${className} extends BaseEntity{
     @OnView(showName="${column.columnAlias}",inputType=InputType.ID)
     <#else>
     @OnView(showName="${column.columnAlias}",inputType=InputType.<#if
-            column.javaType=="java.lang.String"||column.javaType=="String">TEXT<#if mainShow==column.constantName><#assign findMainShow=true>,mainShow=true<#elseif !findMainShow && (column.columnNameLower=="name"||(column.columnNameLower?ends_with("Name")&&classNameLower?lower_case?contains(column.columnNameLower?lower_case?substring(0,column.columnNameLower?length-4)))) ><#assign findMainShow=true>,mainShow=true</#if><#elseif
+            column.javaType=="java.lang.String"||column.javaType=="String">TEXT<#elseif
             column.javaType=="java.lang.Boolean"||column.javaType=="Boolean">BOOLEAN<#elseif
             column.javaType=="Long" ||column.javaType=="java.lang.Long">NUMBER<#elseif
             column.javaType=="java.util.Date"||column.javaType=="Date">DATE,searchType= SearchType.BETWEEN<#else
