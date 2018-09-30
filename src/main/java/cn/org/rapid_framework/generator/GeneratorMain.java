@@ -21,11 +21,8 @@ public class GeneratorMain {
 		GeneratorFacade facade = new GeneratorFacade();
 		facade.setGenerator(generator);
 		facade.deleteOutRootDir();
-//
 
-
-
-		GeneratorProperties.setProperty("moduleName","life");
+		GeneratorProperties.setProperty("moduleName","test");
 		GeneratorProperties.setProperty("basepackage","com.lingyun.projects");
 		GeneratorProperties.setProperty("tableRemovePrefixes","test");
 
@@ -34,9 +31,21 @@ public class GeneratorMain {
 		GeneratorProperties.setProperty("jdbc_username","sa");
 		GeneratorProperties.setProperty("outRoot","generator-output");
 
+
+		GeneratorProperties.setProperty("java_typemapping.java.sql.Timestamp","java.util.Date");
+		GeneratorProperties.setProperty("java_typemapping.java.sql.Date","java.util.Date");
+		GeneratorProperties.setProperty("java_typemapping.java.lang.Byte","Integer");
+		GeneratorProperties.setProperty("java_typemapping.java.lang.Short","Integer");
+		GeneratorProperties.setProperty("java_typemapping.java.math.BigDecimal","Long");
+		GeneratorProperties.setProperty("java_typemapping.java.sql.Clob","String");
+
+//		facade.generateByTable("test_user");
 		facade.generateByTable("test_user");
 
-		//打开文件夹
-		Runtime.getRuntime().exec("cmd.exe /c start "+GeneratorProperties.getRequiredProperty("outRoot"));
+		//打开文件夹(windows)
+//		Runtime.getRuntime().exec("cmd.exe /c start "+GeneratorProperties.getRequiredProperty("outRoot"));
+
+		//打开文件夹(mac,linux)
+		Runtime.getRuntime().exec("open ./"+GeneratorProperties.getRequiredProperty("outRoot"));
 	}
 }

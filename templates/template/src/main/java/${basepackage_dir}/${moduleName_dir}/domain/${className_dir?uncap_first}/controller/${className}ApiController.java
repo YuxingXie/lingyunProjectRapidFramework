@@ -1,64 +1,39 @@
-package ${basepackage}.${moduleName}.domain;
-import com.gzzn.base.view.annotation.SearchType;
-
 <#include "/macro.include"/>
-<#include "/java_copyright.include">
-<#assign className = table.className>   
-<#assign classNameLower = className?uncap_first> 
+		<#include "/java_copyright.include">
+		<#assign className = table.className>
+		<#assign classNameLower = className?uncap_first>
+package ${basepackage}.${moduleName}.domain.${classNameLower}.controller;
 
 
-import java.util.*;
-import javax.persistence.*;
+import com.lingyun.projects.life.common.controller.ProjectApiController;
+import com.lingyun.projects.life.domain.advertisement.entity.Advertisement;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import ${basepackage}.${moduleName}.domain.${classNameLower}.entity.${className};
+import ${basepackage}.${moduleName}.domain.${classNameLower}.service.${className}Service;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import com.system.commons.base.*;
+@CrossOrigin("*")
+@RestController
+public class ${className}ApiController extends ProjectApiController<${className}> {
 
-import ${basepackage}.${moduleName}.domain.*;
-
-@Entity
-@Table(name = "${table.sqlName}")
-public class ${className} extends BaseEntity{
-	private static final long serialVersionUID = 5454155825314635342L;
-	
-	//alias
-	public static final String TABLE_ALIAS = "${table.tableAlias}";
-	<#list table.columns as column>
-	public static final String ${column.constantName} = "${column.columnAlias}";
-
-	</#list>
-
-	//date formats
-	<#list table.columns as column>
-	<#if column.isDateTimeColumn>
-	public static final String FORMAT_${column.constantName} = DATE_FORMAT;
-	</#if>
-	</#list>
-
-	
-	//columns START
-	<#assign findMainShow=false>
+	@Resource
+	private ${className}Service ${classNameLower}Service
 	<#list table.columns as column>
 	/**
-	 * ${column.columnAlias!}	   db_column: ${column.sqlName} 
+	 * modify
 	 */
 
 	<#if column.pk>
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-    @OnView(showName="${column.columnAlias}",inputType=InputType.ID)
+	@RequestMapping(name = "/find/{id}")
+	public ApiResponse<${className}> findById(@PathVariable String id) {
+		return ${classNameLower}Service.findOne(id);
+
+		}
     <#else>
-    @OnView(showName="${column.columnAlias}",inputType=InputType.<#if
-            column.javaType=="java.lang.String"||column.javaType=="String">TEXT<#elseif
-            column.javaType=="java.lang.Boolean"||column.javaType=="Boolean">BOOLEAN<#elseif
-            column.javaType=="Long" ||column.javaType=="java.lang.Long">NUMBER<#elseif
-            column.javaType=="java.util.Date"||column.javaType=="Date">DATE,searchType= SearchType.BETWEEN<#else
-           >OTHER</#if>)
+
 	</#if>
-	@Column(name = "${column.sqlName}", unique = ${column.unique?string}, nullable = ${column.nullable?string}, insertable = true, updatable = true, length = ${column.size})
-	private ${column.javaType} ${column.columnNameLower};
+	@RequestMapping(name = "<#if column.unique>/findby/${column.sqlName}</#if>")
+	public ApiResponse<${className}> ${column.javaType} ${column.columnNameLower};
 	</#list>
 	//columns END
 
@@ -74,7 +49,7 @@ public class ${className} extends BaseEntity{
 		</#list>
 			.toString();
 	}
-	
+
 	public int hashCode() {
 		return new HashCodeBuilder()
 		<#list table.pkColumns as column>
@@ -82,7 +57,7 @@ public class ${className} extends BaseEntity{
 		</#list>
 			.toHashCode();
 	}
-	
+
 	public boolean equals(Object obj) {
 		<#list table.columns as column>
 		<#if column.pk>
@@ -176,3 +151,4 @@ public class ${className} extends BaseEntity{
 	}
 	</#list>
 </#macro>
+}
